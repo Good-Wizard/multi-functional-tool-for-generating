@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='qr_code_generator_style.css') }}">
+    <title>QR Code Generator</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li>
+                <button class="button" onclick="location.href='{{ url_for('index') }}'"> 
+                    <span class="button_lg">
+                        <span class="button_sl"></span>
+                        <span class="button_text">Home</span>
+                    </span>
+                </button>
+            </li>
+            <li>
+                <button class="button" onclick="location.href='{{ url_for('password_generator_func') }}'"> 
+                    <span class="button_lg">
+                        <span class="button_sl"></span>
+                        <span class="button_text">Generate Password</span>
+                    </span>
+                </button>
+            </li>
+            <li>
+                <button class="button" onclick="location.href='{{ url_for('hash_generator_func') }}'"> 
+                    <span class="button_lg">
+                        <span class="button_sl"></span>
+                        <span class="button_text">Generate Hash</span>
+                    </span>
+                </button>
+            </li> 
+            <li>
+                <button class="button" onclick="location.href='{{ url_for('uuid_generator_func') }}'"> 
+                    <span class="button_lg">
+                        <span class="button_sl"></span>
+                        <span class="button_text">Generate UUID</span>
+                    </span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+    <main>
+        <h1>QR Code Generator</h1>
+        <form id="qrForm" action="/qr_generator" method="post" onsubmit="return validateQRForm()">
+            <textarea type="text" id="data" name="data" rows="10" cols="60" placeholder="Enter Your Text Here" required></textarea><br>
+            <button type="submit" class="submit-button">Generate QR Code</button>
+        </form>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        {% if img_data %}
+        <img src="{{ img_data }}" alt="QR Code" id="qr-code-img">
+        <button id="btn-dwn-qr">Download QR Code</button>
+        <script>
+            document.getElementById('btn-dwn-qr').addEventListener('click', function() {
+                var qrImg = document.getElementById('qr-code-img');
+                var downloadLink = document.createElement('a');
+                downloadLink.href = qrImg.src;
+                downloadLink.download = 'qrcode.png';
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Downloaded!',
+                    text: 'QR code downloaded successfully.',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    customClass: {
+                        popup: 'animated fadeInDown'
+                    }
+                });
+            });
+
+            function validateQRForm() {
+                var text = document.getElementById("data").value.trim();
+                if (text === "") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Validation Error',
+                        text: 'Please enter text to generate the QR code.',
+                        showConfirmButton: true
+                    });
+                    return false;
+                }
+                return true;
+            }
+            window.onload = function() {
+                if (document.getElementById("qr-code-img")) {
+                    window.scrollTo(0, document.body.scrollHeight);
+                }
+            };
+        </script>
+        {% endif %}
+    </main>
+</body>
+</html>

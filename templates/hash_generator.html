@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='hash_style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <title>Hash Generator</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li>
+                <button class="button" onclick="location.href='{{ url_for('index') }}'">
+                    <span class="button_lg">
+                        <span class="button_sl"></span>
+                        <span class="button_text">Home</span>
+                    </span>
+                </button>
+            </li>
+            <li>
+                <button class="button" onclick="location.href='{{ url_for('password_generator_func') }}'">
+                    <span class="button_lg">
+                        <span class="button_sl"></span>
+                        <span class="button_text">Generate Password</span>
+                    </span>
+                </button>
+            </li>
+            <li>
+                <button class="button" onclick="location.href='{{ url_for('qr_generator_func') }}'">
+                    <span class="button_lg">
+                        <span class="button_sl"></span>
+                        <span class="button_text">Generate QR Code</span>
+                    </span>
+                </button>
+            </li>
+            <li>
+                <button class="button" onclick="location.href='{{ url_for('uuid_generator_func') }}'">
+                    <span class="button_lg">
+                        <span class="button_sl"></span>
+                        <span class="button_text">Generate UUID</span>
+                    </span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+    <main class="container">
+        <h1>Hash Generator</h1>
+        <form id="hashForm" action="/hash_generator" method="post">
+            <textarea id="text" name="text" rows="10" cols="60" required placeholder="Enter Your Text Here"></textarea><br>
+            <div class="row">
+                <label for="algorithm">Select Algorithm:</label>
+                <select id="algorithm" name="algorithm">
+                  <option value="blake2b">BLAKE2b</option>
+                  <option value="blake2s">BLAKE2s</option>
+                  <option value="md5">MD5</option>
+                  <option value="sha224">SHA-224</option>
+                  <option value="sha256">SHA-256</option>
+                  <option value="sha384">SHA-384</option>
+                  <option value="sha512">SHA-512</option>
+                  <option value="sha3">SHA-3</option>
+                </select>
+              </div><br>
+            <button type="submit" class="submit-button">Generate Hash</button>
+        </form>
+
+        {% if generated_hash %}
+            <h2>Generated Hash</h2>
+            <p><strong>Text:</strong> {{ text }}</p>
+            <p><strong>Algorithm:</strong> {{ selected_algorithm }}</p>
+            <p id="generated_hash">{{ generated_hash }}</p>
+            <button onclick="CopyHash()" class="copy-button">Copy Hash</button>
+            <script>
+                function CopyHash() {
+                    var hash = document.getElementById("generated_hash").innerText;
+                    navigator.clipboard.writeText(hash).then(function() {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Copied!',
+                            text: 'Hash copied to clipboard!',
+                            showConfirmButton: false,
+                            timer: 1500,
+                            customClass: {
+                                popup: 'animated fadeInDown'
+                            }
+                        });
+                    }).catch(function() {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Copying failed. Please try again.',
+                            showConfirmButton: true
+                        });
+                    });
+                }
+
+                // Scroll to the generated hash if it exists
+                window.onload = function() {
+                    if (document.getElementById("generated_hash")) {
+                        window.scrollTo(0, document.body.scrollHeight);
+                    }
+                };
+            </script>
+        {% endif %}
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+</body>
+</html>

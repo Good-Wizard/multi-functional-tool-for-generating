@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index_style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Welcome to Our Generator Page! 🎉</h1>
+        <p>Generate various types of data with our easy-to-use tools. Whether you need secure passwords, hashes, QR codes, or UUIDs, we've got you covered! 🌟</p>
+    </header>
+
+    <!-- Error Container -->
+    <div id="error-container" class="hidden">
+        <p id="error-message"></p>
+    </div>
+
+    <div class="card-container">
+        <a href="{{ url_for('password_generator_func') }}" class="card" id="password">
+            <h2>🔐 Password Generator</h2>
+            <p>Create a <strong>secure password</strong> to protect your online identity. Use our tool to generate a strong and unique password that will keep your accounts safe.</p>
+            <ul>
+                <li>Easy to use</li>
+                <li>Highly secure</li>
+                <li>Customizable options</li>
+            </ul>
+        </a>
+        <a href="{{ url_for('hash_generator_func') }}" class="card" id="hash">
+            <h2>🔒 Hash Generator</h2>
+            <p>Convert a variable length sequence of bytes into a <strong>fixed length sequence</strong> with our hash function. Hash functions are essential for data integrity and security.</p>
+            <ul>
+                <li>Fast and efficient</li>
+                <li>One-way encryption</li>
+                <li>Widely used in data security</li>
+            </ul>
+        </a>
+        <a href="{{ url_for('qr_generator_func') }}" class="card" id="qr">
+            <h2>📷 QR Code Generator</h2>
+            <p>Create a machine-readable <strong>optical label</strong> containing information about the item to which it is attached. Perfect for URLs, contact info, and more.</p>
+            <ul>
+                <li>Easy to scan</li>
+                <li>High data capacity</li>
+                <li>Versatile usage</li>
+            </ul>
+        </a>
+        <a href="{{ url_for('uuid_generator_func') }}" class="card" id="uuid">
+            <h2>🆔 UUID Generator</h2>
+            <p>Generate a <strong>universally unique identifier (UUID)</strong> to identify information in computer systems. UUIDs are essential for database keys, identifiers, and more.</p>
+            <ul>
+                <li>Globally unique</li>
+                <li>128-bit number</li>
+                <li>Essential for unique identification</li>
+            </ul>
+        </a>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

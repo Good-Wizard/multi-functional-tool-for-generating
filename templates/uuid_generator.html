@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='uuid_generator_style.css') }}">
+    <title>UUID Generator</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li>
+                <button class="button" onclick="location.href='{{ url_for('index') }}'"> 
+                    <span class="button_lg">
+                        <span class="button_sl"></span>
+                        <span class="button_text">Home</span>
+                    </span>
+                </button>
+            </li>
+            <li>
+                <button class="button" onclick="location.href='{{ url_for('password_generator_func') }}'"> 
+                    <span class="button_lg">
+                        <span class="button_sl"></span>
+                        <span class="button_text">Generate Password</span>
+                    </span>
+                </button>
+            </li>
+            <li>
+                <button class="button" onclick="location.href='{{ url_for('hash_generator_func') }}'"> 
+                    <span class="button_lg">
+                        <span class="button_sl"></span>
+                        <span class="button_text">Generate Hash</span>
+                    </span>
+                </button>
+            </li> 
+            <li>
+                <button class="button" onclick="location.href='{{ url_for('qr_generator_func') }}'"> 
+                    <span class="button_lg">
+                        <span class="button_sl"></span>
+                        <span class="button_text">Generate QR Code</span>
+                    </span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+    <main>
+        <h1>UUID Generator</h1>
+        <form action="/uuid_generator" method="post">
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" min="1" max="100" required>
+            <button type="submit">Generate UUID(s)</button>
+        </form>
+
+        {% if uuids %}
+        <h2>Generated UUIDs</h2>
+        <textarea id="uuids" rows="10" cols="60" aria-label="Generated UUIDs">{% for i in range(1, uuids|length + 1) %}
+{{ i }}. {{ uuids[i-1] }}
+{% endfor %}
+</textarea><br>
+        <button onclick="copyFirstLine()" title="Copy First UUID">Copy 1st UUID</button>
+        <button id="CopyFirstUUID" onclick="copyAlluuids()" title="Copy All UUIDS">Copy All UUIDs</button>
+        <button onclick="downloadUUIDS()">Download UUIDS</button>
+        {% endif %}
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script>
+        function copyFirstLine() {
+            var uuid = document.getElementById("uuids").value;
+            var firstLine = uuid.split('\n')[0].split('. ')[1].trim();
+            navigator.clipboard.writeText(firstLine);
+            alert("First UUID copied to clipboard");
+        }
+
+        function copyAlluuids() {
+            var uuids = document.getElementById("uuids").value;
+            var lines = uuids.split('\n');
+            var alluuids = "";
+            for (var i = 0; i < lines.length; i++) {
+                if (lines[i].trim() !== "") {
+                    var uuid = lines[i].split('. ')[1].trim();
+                    alluuids += uuid + "\n";
+                }
+            }
+            navigator.clipboard.writeText(alluuids.trim());
+            alert("All UUIDs copied to clipboard.");
+        }
+
+        window.onload = function() {
+            if (document.getElementById("CopyFirstUUID")) {
+                window.scrollTo(0, document.body.scrollHeight);
+            }
+        };
+
+        function downloadUUIDS() {
+            var uuids = document.getElementById("uuids").value;
+            var blob = new Blob([uuids], { type: "text/plain;charset=utf-8" });
+            saveAs(blob, "generated_uuids.txt");
+            Swal.fire({
+                icon: 'success',
+                title: 'Downloaded!',
+                text: 'UUIDs downloaded as text file.',
+                showConfirmButton: false,
+                timer: 1500,
+                customClass: {
+                    popup: 'animated fadeInDown'
+                }
+            });
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</body>
+</html>
